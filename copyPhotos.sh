@@ -69,20 +69,22 @@ fi
 
 for file in *; do
 	if [ -f "$file" ]; then
-		mtime=$(stat "$file" -c%y | cut -d" " -f1 | sed 's/-//g')
-		myear=$(stat "$file" -c%y | cut -d" " -f1| cut -d"-" -f1)
+		mtime=$( stat "$file" -c%y | cut -d" " -f1 | sed 's/-//g')
+		myear=$( stat "$file" -c%y | cut -d" " -f1 | cut -d"-" -f1)
+                mmonth=$(stat "$file" -c%y | cut -d" " -f1 | cut -d"-" -f2)
+                mday=$(  stat "$file" -c%y | cut -d" " -f1 | cut -d"-" -f3)
 
-		if [ ! -d "$dstDir/$mtime" ]; then
-		    echo "making directory $dstDir/$mtime";
-			mkdir -p "$dstDir/$mtime";
+		if [ ! -d "$dstDir/$myear/$mmonth/$mday" ]; then
+		    echo "making directory $dstDir/$myear/$mmonth/$mday";
+			mkdir -p "$dstDir/$myear/$mmonth/$mday";
 		fi
 
         if [ $skipDuplicateFiles = true ]; then
-            echo "copying -n -v $file to $dstDir/$mtime"
-            cp -n -v "$file" "$dstDir/$mtime"
+            echo "copying -n -v $file to $dstDir/$myear/$mmonth/$mday"
+            cp -n -v "$file" "$dstDir/$myear/$mmonth/$mday"
         elif [ $overwriteDuplicateFiles = true ]; then
-            echo "copying -v $file to $dstDir/$mtime"
-            cp -v "$file" "$dstDir/$mtime"
+            echo "copying -v $file to $dstDir/$myear/$mmonth/$mday"
+            cp -v "$file" "$dstDir/$myear/$mmonth/$mday"
         fi
 	fi
 done
